@@ -1,49 +1,54 @@
-import React, { useEffect, useState } from "react";
-import "./App.css";
-import Container from "@mui/material/Container";
-import { Stack, Paper, Box } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import React, { useEffect, useRef, useState } from "react"
+import "./App.css"
+import Container from "@mui/material/Container"
+import { Stack, Paper, Box } from "@mui/material"
+import { styled } from "@mui/material/styles"
+import LockIcon from "@mui/icons-material/Lock"
+import LockOpenIcon from "@mui/icons-material/LockOpen"
 
-type Item = {
-  lang: "TH" | "EN";
-  word: string;
-};
+type ItemType = {
+  lang: "TH" | "EN"
+  word: string
+  lock?: boolean
+}
+
+const BlockItemList = styled(Paper)(({ theme }) => ({
+  backgroundColor: "white",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: "#1A2027",
+  border: "1px solid #1A2027",
+  cursor: "pointer",
+  userSelect: "none",
+  ":hover": {
+    backgroundColor: "#1A2027",
+    color: "white"
+  }
+}))
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#1A2027",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: "white",
+  width: 400,
+  height: 600
+}))
+
+const BlockHeader = styled(Paper)(({ theme }) => ({
+  backgroundColor: "white",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: "#1A2027",
+  border: "1px solid #1A2027"
+}))
 
 function App() {
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: "#1A2027",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: "white",
-    width: 400,
-    height: 800
-  }));
 
-  const BlockHeader = styled(Paper)(({ theme }) => ({
-    backgroundColor: "white",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: "#1A2027",
-    border: "1px solid #1A2027"
-  }));
-
-  const BlockContent = styled(Paper)(({ theme }) => ({
-    backgroundColor: "white",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: "#1A2027",
-    border: "1px solid #1A2027",
-    cursor: "pointer",
-    ":hover": {
-      backgroundColor: "#1A2027",
-      color: "white"
-    }
-  }));
-
-  const array: Item[] = [
+  const [arrayAll, setArrayAll] = useState<ItemType[]>([
     {
       lang: "TH",
       word: "ควาย"
@@ -84,131 +89,36 @@ function App() {
       lang: "EN",
       word: "Sheep"
     }
-  ];
-  const [arrayAll, setArrayAll] = useState<Item[]>([
-    {
-      lang: "TH",
-      word: "ควาย"
-    },
-    {
-      lang: "EN",
-      word: "Buffalo"
-    },
-    {
-      lang: "TH",
-      word: "ปลาทอง"
-    },
-    {
-      lang: "EN",
-      word: "Goldfish"
-    },
-    {
-      lang: "TH",
-      word: "ม้า"
-    },
-    {
-      lang: "EN",
-      word: "Horse"
-    },
-    {
-      lang: "TH",
-      word: "กระต่าย"
-    },
-    {
-      lang: "EN",
-      word: "Rabbit"
-    },
-    {
-      lang: "TH",
-      word: "แกะ"
-    },
-    {
-      lang: "EN",
-      word: "Sheep"
-    }
-  ]);
-  const [arrayTH, setArrayTH] = useState<Item[]>([]);
-  const [arrayEN, setArrayEN] = useState<Item[]>([]);
-  const [timeoutArray, setTimeoutArray] = useState<any>([]);
-  // const [selected, setSelected] = useState<Item>();
+  ])
 
-  const debounce = (func:any, timeout = 3000) => {
-    let timer:any;
-    return (...args:any) => {
-      clearTimeout(timer);
-      // @ts-ignore: Unreachable code error
-      timer = setTimeout(() => { func.apply(this); }, timeout);
-    };
-  }
-  function saveInput(){
-    console.log('Saving data');
-  }
-  const processChange = debounce(() => saveInput());
+  const [arraySelected, setArraySelected] = useState<ItemType[]>([]);
 
-  // useEffect(
-  //   () => {
-  //     timeoutArray.push(setTimeout(() => {
-  //       if(selected?.lang ==='TH'){
-  //         fnReturnTH(selected)
-  //       }else if(selected?.lang ==='EN'){
-  //         fnReturnEN(selected)
-  //       }
-  //     }, 2000))
-  //     // return () => {
-  //     //   timeoutArray.forEach((timeout: string | number | NodeJS.Timeout | undefined) => clearTimeout(timeout));
-  //     // };
-  //   },
-  //   [selected]
-  // );
-
-  const fnRemove = (data: Item, index: any) => {
-    // setSelected(data);
-    setArrayAll(prev => prev.filter((_, i) => i !== index));
-    setArrayTH(prev => {
-      return [...prev, data].filter((item: Item) => item.lang === "TH");
-    });
-    setArrayEN(prev => {
-      return [...prev, data].filter((item: Item) => item.lang === "EN");
-    });
-
-  };
-
-  const fnReturnTH = (data: Item) => {
-    setArrayAll(prev => {
-      return [...prev, data];
-    });
-    setArrayTH(prev => prev.filter((item, i) => item.word !== data.word));
-  };
-
-  const fnReturnEN = (data: Item) => {
-    setArrayAll(prev => {
-      return [...prev, data];
-    });
-    setArrayEN(prev => prev.filter((item, i) => item.word !== data.word));
-  };
-
-  const fnClearTimeout = (data:any) => {
-    clearTimeout(timeoutArray[data]);
+  const fnMoveWord = (data: ItemType) => {
+    setArrayAll((prev) => prev.filter((item, i) => item.word !== data.word))
+    setArraySelected([...arraySelected, {
+      ...data,
+      lock: false
+    }])
   }
 
   return (
-    <div className="App">
+    <>
       <Container maxWidth="lg" sx={{ height: "1000px", paddingTop: 20 }}>
         <Stack direction="row" spacing={10} justifyContent={"center"}>
           <Box width={400}>
-            <BlockHeader sx={{ marginBottom: 1, width: "100%" }} >
+            <BlockHeader sx={{ marginBottom: 1, width: "100%" }}>
               คำศัพท์
             </BlockHeader>
             <Item sx={{ marginBottom: 1 }}>
               {arrayAll.map((item, index) => {
                 return (
-                  <BlockContent
+                  <BlockItemList
                     key={index}
-                    onClick={() => fnRemove(item, index)}
+                    onClick={() => fnMoveWord(item)}
                   >
                     {item.word}
-                  </BlockContent>
-                );
+                  </BlockItemList>
+                )
               })}
             </Item>
           </Box>
@@ -218,16 +128,16 @@ function App() {
               ภาษาไทย
             </BlockHeader>
             <Item sx={{ marginBottom: 1 }}>
-              {arrayTH.map((item, index) => {
+              {arraySelected.filter(item => item.lang === "TH").map((item, index) => {
                 return (
-                  <BlockContent 
-                    key={index} 
-                    // onClick={() => fnReturnTH(item)}
-                    onClick={()=> fnClearTimeout(item)}
-                  >
-                    {item.word}
-                  </BlockContent>
-                );
+                  <BlockItem
+                    key={item.word}
+                    index={index}
+                    item={item}
+                    setArrayAll={setArrayAll}
+                    setArraySelect={setArraySelected}
+                  />
+                )
               })}
             </Item>
           </Box>
@@ -237,19 +147,101 @@ function App() {
               ภาษาอังกฤษ
             </BlockHeader>
             <Item sx={{ marginBottom: 1 }}>
-              {arrayEN.map((item, index) => {
+              {arraySelected.filter(item => item.lang === "EN").map((item, index) => {
                 return (
-                  <BlockContent key={index} onClick={() => fnReturnEN(item)}>
-                    {item.word}
-                  </BlockContent>
-                );
+                  <BlockItem
+                    key={item.word}
+                    index={index}
+                    item={item}
+                    setArrayAll={setArrayAll}
+                    setArraySelect={setArraySelected}
+                  />
+                )
               })}
             </Item>
           </Box>
         </Stack>
       </Container>
-    </div>
-  );
+    </>
+  )
 }
 
-export default App;
+export default App
+
+const BlockItem = React.memo(({ item, setArraySelect, setArrayAll }: any) => {
+  const [countdown, setCountdown] = useState(5)
+  const countDownRef = useRef<any>(null)
+
+  const fnCountdown = () => {
+    let count = 5
+    countDownRef.current = setInterval(() => {
+      setCountdown(count)
+      count--
+      if (count < 0) {
+        clearInterval(countDownRef.current)
+        setArrayAll((prev: any) => [...prev, item])
+        setArraySelect((prev: any) => prev.filter((data: any) => data.word !== item.word))
+      }
+
+    }, 1000)
+  }
+
+  const CallbackCountdown = React.useCallback(() => {
+    fnCountdown()
+  }, [])
+
+  const fnToggleLock = (event: any, lock: boolean) => {
+    event.stopPropagation()
+    if (!lock) {
+      clearInterval(countDownRef.current)
+    } else {
+      CallbackCountdown()
+    }
+    setArraySelect((prev: any) => {
+      return prev.map((data: any) => {
+        if (item.word === data.word) {
+          return { ...data, lock: !item.lock }
+        } else {
+          return data
+        }
+      })
+    })
+  }
+
+  const fnReturnData = () => {
+    clearInterval(countDownRef.current)
+    setArrayAll((prev: any) => [...prev, item])
+    setArraySelect((prev: any) => prev.filter((data: any) => data.word !== item.word))
+  }
+
+  useEffect(() => {
+    CallbackCountdown()
+  }, [])
+
+  return (
+    <BlockItemList onClick={fnReturnData} sx={{ position: 'relative' }}>
+      {item.word} {`  ${countdown} s`}
+      {
+        item.lock ? (
+          <LockIcon
+            sx={{
+              position: "absolute",
+              right: 20
+            }}
+            fontSize="small"
+            onClick={(event) => fnToggleLock(event, item.lock)}
+          />
+        ) : (
+          <LockOpenIcon
+            sx={{
+              position: "absolute",
+              right: 20
+            }}
+            fontSize="small"
+            onClick={(event) => fnToggleLock(event, item.lock)}
+          />
+        )
+      }
+    </BlockItemList>
+  )
+})
