@@ -171,7 +171,7 @@ export default App
 const BlockItem = React.memo(({ item, setArraySelect, setArrayAll }: any) => {
   const [countdown, setCountdown] = useState(5)
   const countDownRef = useRef<any>(null)
-  const [lock, setLock] = useState(false);
+
   const fnCountdown = () => {
     let count = 5
     countDownRef.current = setInterval(() => {
@@ -197,16 +197,15 @@ const BlockItem = React.memo(({ item, setArraySelect, setArrayAll }: any) => {
     } else {
       CallbackCountdown()
     }
-    setLock(!lock)
-    // setArraySelect((prev: any) => {
-    //   return prev.map((data: any) => {
-    //     if (item.word === data.word) {
-    //       return { ...data, lock: !item.lock }
-    //     } else {
-    //       return data
-    //     }
-    //   })
-    // })
+    setArraySelect((prev: any) => {
+      return prev.map((data: any) => {
+        if (item.word === data.word) {
+          return { ...data, lock: !item.lock }
+        } else {
+          return data
+        }
+      })
+    })
   }
 
   const fnReturnData = () => {
@@ -223,14 +222,14 @@ const BlockItem = React.memo(({ item, setArraySelect, setArrayAll }: any) => {
     <BlockItemList onClick={fnReturnData} sx={{ position: 'relative' }}>
       {item.word} {`  ${countdown} s`}
       {
-        lock ? (
+        item.lock ? (
           <LockIcon
             sx={{
               position: "absolute",
               right: 20
             }}
             fontSize="small"
-            onClick={(event) => fnToggleLock(event, lock)}
+            onClick={(event) => fnToggleLock(event, item.lock)}
           />
         ) : (
           <LockOpenIcon
@@ -239,7 +238,7 @@ const BlockItem = React.memo(({ item, setArraySelect, setArrayAll }: any) => {
               right: 20
             }}
             fontSize="small"
-            onClick={(event) => fnToggleLock(event, lock)}
+            onClick={(event) => fnToggleLock(event, item.lock)}
           />
         )
       }
