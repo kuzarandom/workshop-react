@@ -20,7 +20,7 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: "center",
   color: "#1A2027",
   width: 400,
-  height: 600,
+  minHeight: 600,
   borderRadius: '16px',
   boxShadow: '0px 4px 30px rgba(0,0,0,0.1)',
   backdropFilter: 'blur(5px)',
@@ -116,7 +116,7 @@ function App() {
       {/* <Container sx={{ paddingTop: 20 , backgroundColor: 'red' }}> */}
       <Stack direction="row" spacing={10} justifyContent={"center"}>
         <Box width={400}>
-          <CardListHeader sx={{ marginBottom: 1, width: "100%" }}>
+          <CardListHeader sx={{ marginBottom: 1.2, width: "100%" }}>
             คำศัพท์
           </CardListHeader>
           <Item sx={{ marginBottom: 1 }}>
@@ -134,7 +134,7 @@ function App() {
         </Box>
 
         <Box width={400}>
-          <CardListHeader sx={{ marginBottom: 1, width: "100%" }}>
+          <CardListHeader sx={{ marginBottom: 1.2, width: "100%" }}>
             ภาษาไทย
           </CardListHeader>
           <Item sx={{ marginBottom: 1 }}>
@@ -153,7 +153,7 @@ function App() {
         </Box>
 
         <Box width={400}>
-          <CardListHeader sx={{ marginBottom: 1, width: "100%" }}>
+          <CardListHeader sx={{ marginBottom: 1.2, width: "100%" }}>
             ภาษาอังกฤษ
           </CardListHeader>
           <Item sx={{ marginBottom: 1 }}>
