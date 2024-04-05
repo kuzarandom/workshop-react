@@ -29,7 +29,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 const CardListItem = styled(Box)(({ theme }) => ({
-  background: "rgba(255, 255, 255, 0.2)",
+  background: "rgba(255, 255, 255, 0.4)",
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "center",
@@ -38,7 +38,7 @@ const CardListItem = styled(Box)(({ theme }) => ({
   backdropFilter: 'blur(5px)',
   marginBottom: '8px',
   fontSize: 16,
-  border: '1px solid rgba(255, 255, 255, 0.3)',
+  border: '1px solid rgba(255, 255, 255, 0.7)',
   cursor: 'pointer',
   transition: 'all 0.05s',
   ':hover': {
