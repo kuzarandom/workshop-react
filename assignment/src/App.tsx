@@ -5,6 +5,7 @@ import { Stack, Paper, Box } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import LockIcon from "@mui/icons-material/Lock"
 import LockOpenIcon from "@mui/icons-material/LockOpen"
+import styles from './/style.module.css'
 
 type ItemType = {
   lang: "TH" | "EN"
@@ -12,38 +13,50 @@ type ItemType = {
   lock?: boolean
 }
 
-const BlockItemList = styled(Paper)(({ theme }) => ({
-  backgroundColor: "white",
+const Item = styled(Paper)(({ theme }) => ({
+  background: "rgba(255, 255, 255, 0.2)",
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "center",
   color: "#1A2027",
-  border: "1px solid #1A2027",
-  cursor: "pointer",
-  userSelect: "none",
-  ":hover": {
-    backgroundColor: "#1A2027",
-    color: "white"
+  width: 400,
+  height: 600,
+  borderRadius: '16px',
+  boxShadow: '0px 4px 30px rgba(0,0,0,0.1)',
+  backdropFilter: 'blur(5px)',
+  border: '1px solid rgba(255, 255, 255, 0.3)'
+}))
+
+
+const CardListItem = styled(Box)(({ theme }) => ({
+  background: "rgba(255, 255, 255, 0.2)",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  borderRadius: '16px',
+  boxShadow: '0px 4px 30px rgba(0,0,0,0.1)',
+  backdropFilter: 'blur(5px)',
+  marginBottom: '8px',
+  fontSize: 16,
+  border: '1px solid rgba(255, 255, 255, 0.3)',
+  cursor: 'pointer',
+  transition: 'all 0.05s',
+  ':hover': {
+    background: "rgba(255, 255, 255, 0.8)",
   }
 }))
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: "#1A2027",
+const CardListHeader = styled(Box)(({ theme }) => ({
+  background: "rgba(255, 255, 255, 1)",
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "center",
-  color: "white",
-  width: 400,
-  height: 600
-}))
+  borderRadius: '16px',
+  boxShadow: '0px 4px 30px rgba(0,0,0,0.1)',
+  backdropFilter: 'blur(5px)',
+  marginBottom: '8px',
+  fontSize: 16,
 
-const BlockHeader = styled(Paper)(({ theme }) => ({
-  backgroundColor: "white",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: "#1A2027",
-  border: "1px solid #1A2027"
 }))
 
 function App() {
@@ -95,74 +108,71 @@ function App() {
 
   const fnMoveWord = (data: ItemType) => {
     setArrayAll((prev) => prev.filter((item, i) => item.word !== data.word))
-    setArraySelected([...arraySelected, {
-      ...data,
-      lock: false
-    }])
+    setArraySelected([...arraySelected, data])
   }
 
   return (
-    <>
-      <Container maxWidth="lg" sx={{ height: "1000px", paddingTop: 20 }}>
-        <Stack direction="row" spacing={10} justifyContent={"center"}>
-          <Box width={400}>
-            <BlockHeader sx={{ marginBottom: 1, width: "100%" }}>
-              คำศัพท์
-            </BlockHeader>
-            <Item sx={{ marginBottom: 1 }}>
-              {arrayAll.map((item, index) => {
-                return (
-                  <BlockItemList
-                    key={index}
-                    onClick={() => fnMoveWord(item)}
-                  >
-                    {item.word}
-                  </BlockItemList>
-                )
-              })}
-            </Item>
-          </Box>
+    <div className={styles.container}>
+      {/* <Container sx={{ paddingTop: 20 , backgroundColor: 'red' }}> */}
+      <Stack direction="row" spacing={10} justifyContent={"center"}>
+        <Box width={400}>
+          <CardListHeader sx={{ marginBottom: 1, width: "100%" }}>
+            คำศัพท์
+          </CardListHeader>
+          <Item sx={{ marginBottom: 1 }}>
+            {arrayAll.map((item, index) => {
+              return (
+                <CardListItem
+                  key={index}
+                  onClick={() => fnMoveWord(item)}
+                >
+                  {item.word}
+                </CardListItem>
+              )
+            })}
+          </Item>
+        </Box>
 
-          <Box width={400}>
-            <BlockHeader sx={{ marginBottom: 1, width: "100%" }}>
-              ภาษาไทย
-            </BlockHeader>
-            <Item sx={{ marginBottom: 1 }}>
-              {arraySelected.filter(item => item.lang === "TH").map((item, index) => {
-                return (
-                  <BlockItem
-                    key={item.word}
-                    index={index}
-                    item={item}
-                    setArrayAll={setArrayAll}
-                    setArraySelect={setArraySelected}
-                  />
-                )
-              })}
-            </Item>
-          </Box>
+        <Box width={400}>
+          <CardListHeader sx={{ marginBottom: 1, width: "100%" }}>
+            ภาษาไทย
+          </CardListHeader>
+          <Item sx={{ marginBottom: 1 }}>
+            {arraySelected.filter(item => item.lang === "TH").map((item, index) => {
+              return (
+                <BlockItem
+                  key={item.word}
+                  index={index}
+                  item={item}
+                  setArrayAll={setArrayAll}
+                  setArraySelect={setArraySelected}
+                />
+              )
+            })}
+          </Item>
+        </Box>
 
-          <Box width={400}>
-            <BlockHeader sx={{ marginBottom: 1, width: "100%" }}>
-              ภาษาอังกฤษ
-            </BlockHeader>
-            <Item sx={{ marginBottom: 1 }}>
-              {arraySelected.filter(item => item.lang === "EN").map((item, index) => {
-                return (
-                  <BlockItem
-                    key={item.word}
-                    index={index}
-                    item={item}
-                    setArrayAll={setArrayAll}
-                    setArraySelect={setArraySelected}
-                  />
-                )
-              })}
-            </Item>
-          </Box>
-        </Stack>
-      </Container>
-    </>
+        <Box width={400}>
+          <CardListHeader sx={{ marginBottom: 1, width: "100%" }}>
+            ภาษาอังกฤษ
+          </CardListHeader>
+          <Item sx={{ marginBottom: 1 }}>
+            {arraySelected.filter(item => item.lang === "EN").map((item, index) => {
+              return (
+                <BlockItem
+                  key={item.word}
+                  index={index}
+                  item={item}
+                  setArrayAll={setArrayAll}
+                  setArraySelect={setArraySelected}
+                />
+              )
+            })}
+          </Item>
+        </Box>
+      </Stack>
+      {/* </Container> */}
+    </div>
   )
 }
 
@@ -220,7 +230,11 @@ const BlockItem = React.memo(({ item, setArraySelect, setArrayAll }: any) => {
   }, [])
 
   return (
-    <BlockItemList onClick={fnReturnData} sx={{ position: 'relative' }}>
+    <CardListItem onClick={() => {
+      if (lock !== true) {
+        fnReturnData()
+      }
+    }} sx={{ position: 'relative' }}>
       {item.word} {`  ${countdown} s`}
       {
         lock ? (
@@ -243,6 +257,6 @@ const BlockItem = React.memo(({ item, setArraySelect, setArrayAll }: any) => {
           />
         )
       }
-    </BlockItemList>
+    </CardListItem>
   )
 })
